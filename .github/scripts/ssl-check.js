@@ -18,7 +18,7 @@ async function main() {
     const currentDate = new Date();
     const daysLeft = Math.floor((certificateInfo.validTo - currentDate) / (1000 * 60 * 60 * 24));
 
-    if (daysLeft <= 30) {
+    if (daysLeft <= 30000) {
       await sendSlackNotification(domain, daysLeft);
     }
   } catch (error) {
