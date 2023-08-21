@@ -19,10 +19,10 @@ jobs:
           node-version: 14
 
       - name: Install dependencies
-        run: npm install axios
+        run: |
+          npm install axios ssl-certificate-expiration-date
 
       - name: Run SSL Check
         run: node .github/scripts/ssl-check.js
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-          DOMAIN_LIST: ${{ secrets.DOMAIN_LIST }}
