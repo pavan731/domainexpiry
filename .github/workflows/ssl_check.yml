@@ -18,10 +18,6 @@ jobs:
         with:
           node-version: 14
 
-      - name: Install dependencies
-        run: |
-          npm install axios ssl-certificate-expiration-date
-
       - name: Run SSL Check
         run: node .github/scripts/ssl-check.js
         env:
