@@ -13,12 +13,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set up Node.js
+      - name: Set up Bash
         uses: actions/setup-node@v2
         with:
-          node-version: 14
+          node-version: '14'
 
       - name: Run SSL Check
-        run: node .github/scripts/ssl-check.js
+        run: bash .github/scripts/ssl-check.sh
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          DOMAIN_LIST: ${{ secrets.DOMAIN_LIST }}
