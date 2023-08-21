@@ -2,7 +2,7 @@ const axios = require('axios');
 const { getCertificate } = require('ssl-certificate-expiration-date');
 
 async function sendSlackNotification(domain, daysLeft) {
-  const slackWebhook = process.env.https://hooks.slack.com/services/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;
+  const slackWebhook = process.env.SLACK_WEBHOOK_URL;
   const message = `SSL Expiry Alert\n` +
     `   * Domain: ${domain}\n` +
     `   * Warning: The SSL certificate for ${domain} will expire in ${daysLeft} days.`;
