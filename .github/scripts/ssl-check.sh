@@ -1,26 +1,33 @@
 #!/bin/bash
 
-SLACK_WEBHOOK_URL=$1
-DOMAIN_LIST=$2
+DOMAIN_LIST=$DOMAIN_LIST
+SLACK_WEBHOOK_URL=$SLACK_WEBHOOK_URL 
 
 function sendSlackNotification {
-  local domain=$1
-  local daysLeft=$2
-
-  local message="SSL Expiry Alert\n"
-  message+="   * Domain: $domain\n"
-  message+="   * Warning: The SSL certificate for $domain will expire in $daysLeft days."
+  local message="$1"
 
   curl -X POST -H 'Content-type: application/json' --data "{\"text\":\"$message\"}" "$SLACK_WEBHOOK_URL"
 }
 
-while IFS= read -r domain; do
-  expiry_date=$(openssl s_client -servername "$domain" -connect "$domain":443 </dev/null 2>/dev/null | openssl x509 -noout -enddate | sed 's/notAfter=//')
-  expiry_timestamp=$(date -d "$expiry_date" +%s)
-  current_timestamp=$(date +%s)
-  days_left=$(( ($expiry_timestamp - $current_timestamp) / 86400 ))
+# ... (rest of your script)
 
-  if [ "$days_left" -lt 30 ]; then
-    sendSlackNotification "$domain" "$days_left"
+for DOMAIN in $DOMAINLIST
+do
+  EXPIRY=$( echo | openssl s_client -servername $DOMAIN -connect $DOMAIN:443 2>/dev/null | openssl x509 -noout -dates | grep notAfter | sed 's/notAfter=//')
+  EXPIRYSIMPLE=$( date -d "$EXPIRY" +%F )
+  EXPIRYSEC=$(date -d "$EXPIRY" +%s)
+  TODAYSEC=$(date +%s)
+  EXPIRYCALC=$(echo "($EXPIRYSEC-$TODAYSEC)/86400" | bc )
+  # Output
+  if [ $EXPIRYCALC -lt $EXPIRYALERTDAYS ] ;
+  then
+    alert_message="######ALERT####### $DOMAIN Cert needs to be renewed."
+    sendSlackNotification "$alert_message"
   fi
-done <<< "$DOMAIN_LIST"
+  echo "$EXPIRYSIMPLE - $DOMAIN expires (in $EXPIRYCALC days)"
+done
+
+#   if [ "$days_left" -lt 30 ]; then
+#     sendSlackNotification "$domain" "$days_left"
+#   fi
+# done <<< "$DOMAIN_LIST"
