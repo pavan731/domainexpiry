@@ -15,7 +15,7 @@ function sendSlackNotification {
 }
 
 while IFS= read -r domain; do
-  expiry_date=$(openssl s_client -servername "$domain" -connect "$domain":443 2>/dev/null | openssl x509 -noout -enddate | sed 's/notAfter=//')
+  expiry_date=$(openssl s_client -servername "$domain" -connect "$domain":443 </dev/null 2>/dev/null | openssl x509 -noout -enddate | sed 's/notAfter=//')
   expiry_timestamp=$(date -d "$expiry_date" +%s)
   current_timestamp=$(date +%s)
   days_left=$(( ($expiry_timestamp - $current_timestamp) / 86400 ))
