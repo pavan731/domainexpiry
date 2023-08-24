@@ -37,7 +37,7 @@ def main():
                 try:
                     days_to_expire = check_ssl_expiry(domain)
 
-                    if days_to_expire <= 30:
+                    if days_to_expire <= 300:
                         send_slack_notification(domain, days_to_expire)
                 except requests.exceptions.RequestException as e:
                     print(f"Error fetching SSL certificate for {domain}:", e)
