@@ -2,7 +2,7 @@ name: SSL Expiry Check
 
 on:
   schedule:
-    - cron: '40 19 * * *' # Run every day at 7:40pm UTC
+    - cron: '0 0 * * *' # Run every day at 7:40pm UTC
   workflow_dispatch: # Allow manual triggering
 
 jobs:
